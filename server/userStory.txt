@@ -1,0 +1,15 @@
+register/login page takes username and password
+
+backend creates new user/logs user in
+
+User { username, password, ID, lastActive }
+
+Message { messageID, authorID, text, createdAt }
+
+User opens chat and gets new messages
+
+User starts typing and broadcasts typing...
+
+User sends message, adds msg to user's messages, and everyone else gets message
+
+Message saved to DB

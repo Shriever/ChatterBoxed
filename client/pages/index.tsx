@@ -10,23 +10,30 @@ import { socket } from "../utils/socket";
 
 //   return { props: { res } };
 // }
+interface IMessage {
+  messageId: number;
+  authorId: number;
+  msg: string;
+  createdAt?: any;
+}
 
 export default function Home() {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [value, setValue] = useState("");
 
   useEffect(() => {
     socket.auth = { username: "jerry" };
     socket.connect();
-    socket.on("new message", (newMessages: string[]) => {
+    socket.on("new message", (newMessages: IMessage[]) => {
       setMessages(newMessages);
+      console.log(messages);
     });
   }, []);
 
   return (
     <div>
-      {messages.map(msg => (
-        <h5>{msg}</h5>
+      {messages.map((msg, idx) => (
+        <h5 key={idx}>{msg.msg}</h5>
       ))}
       <input
         type='text'
@@ -36,6 +43,7 @@ export default function Home() {
       <button
         onClick={() => {
           socket.emit("message", value);
+          setValue("");
         }}
       >
         send
