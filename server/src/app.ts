@@ -36,7 +36,7 @@ app.use(
       domain: __prod__ ? "" : undefined,
     },
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET || "troll",
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
   })
 );

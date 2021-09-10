@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Layout } from "../components/Layout";
 // import styles from "../styles/Home.module.css";
 import { socket } from "../utils/socket";
 
@@ -31,7 +32,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <Layout>
       {messages.map((msg, idx) => (
         <h5 key={idx}>{msg.msg}</h5>
       ))}
@@ -48,6 +49,6 @@ export default function Home() {
       >
         send
       </button>
-    </div>
+    </Layout>
   );
 }
