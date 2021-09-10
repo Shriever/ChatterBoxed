@@ -13,22 +13,39 @@ const io = new Server(server, {
   },
 });
 
-app.get("/", (_, res) => {
-  res.json({ hello: "It is wednesday my dudes" });
-});
+// app.get("/", (_, res) => {
+//   res.json({ hello: "It is wednesday my dudes" });
+// });
 
 io.on("connection", socket => {
-  console.log(socket);
-});
+  const messages = ["hey there", "I like turtles..."];
+  // for (let [id, socket] of io.of("/").sockets) {
+  //   users.push({
+  //     userID: id,
+  //     username: socket.handshake.auth.username,
+  //   });
+  // }
+  // socket.emit("users", users);
 
-io.use((socket, next) => {
-  const username = socket.handshake.auth.username;
-  if (!username) {
-    return next(new Error("invalid username"));
-  }
-
-  next();
+  // notify existing users
+  // socket.broadcast.emit("user connected", {
+  //   userID: socket.id,
+  //   username: socket.handshake.auth.username,
+  // });
+  io.on("message", (value: string) => {
+    messages.push(value);
+    socket.broadcast.emit("new message", messages);
+  });
 });
+// io.use((socket, next) => {
+//   const username = socket.handshake.auth.username;
+//   if (!username) {
+//     return next(new Error("invalid username"));
+//   }
+
+//   next();
+// });
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log("listening on port " + PORT);
