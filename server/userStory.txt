@@ -1,3 +1,5 @@
+User sees homepage and can't send messages without logging in
+
 register/login page takes username and password
 
 backend creates new user/logs user in
