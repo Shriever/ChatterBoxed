@@ -1,3 +1,4 @@
+import { Box, Button, Flex, Input } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -33,22 +34,27 @@ export default function Home() {
 
   return (
     <Layout>
-      {messages.map((msg, idx) => (
-        <h5 key={idx}>{msg.msg}</h5>
-      ))}
-      <input
-        type='text'
-        value={value}
-        onChange={e => setValue(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          socket.emit("message", value);
-          setValue("");
-        }}
-      >
-        send
-      </button>
+      <Box background='blue' height='400px'>
+        {messages.map((msg, idx) => (
+          <h5 key={idx}>{msg.msg}</h5>
+        ))}
+      </Box>
+      <Flex>
+        <Input
+          flex='1'
+          type='text'
+          value={value}
+          onChange={e => setValue(e.target.value)}
+        />
+        <Button
+          onClick={() => {
+            socket.emit("message", value);
+            setValue("");
+          }}
+        >
+          send
+        </Button>
+      </Flex>
     </Layout>
   );
 }
