@@ -1,4 +1,6 @@
-import { Box, Button, Flex, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Input } from "@chakra-ui/react";
+import { Field, Form, Formik } from "formik";
+import { valueScaleCorrection } from "framer-motion/types/render/dom/projection/scale-correction";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -6,12 +8,6 @@ import { Layout } from "../components/Layout";
 // import styles from "../styles/Home.module.css";
 import { socket } from "../utils/socket";
 
-// export async function getStaticProps() {
-//   let res = await fetch("http://localhost:5000/");
-//   res = await res.json();
-
-//   return { props: { res } };
-// }
 interface IMessage {
   messageId: number;
   authorId: number;
@@ -21,39 +17,74 @@ interface IMessage {
 
 export default function Home() {
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [value, setValue] = useState("");
 
-  useEffect(() => {
-    socket.auth = { username: "jerry" };
-    socket.connect();
-    socket.on("new message", (newMessages: IMessage[]) => {
-      setMessages(newMessages);
-      console.log(messages);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.auth = { username: "jerry" };
+  //   socket.connect();
+  //   socket.on("new message", (newMessages: IMessage[]) => {
+  //     setMessages(newMessages);
+  //     console.log(messages);
+  //   });
+  // }, []);
 
   return (
     <Layout>
-      <Box background='blue' height='400px'>
-        {messages.map((msg, idx) => (
-          <h5 key={idx}>{msg.msg}</h5>
-        ))}
-      </Box>
-      <Flex>
-        <Input
-          flex='1'
-          type='text'
-          value={value}
-          onChange={e => setValue(e.target.value)}
-        />
-        <Button
-          onClick={() => {
-            socket.emit("message", value);
-            setValue("");
+      <Flex
+        flexDir='column'
+        justifyContent='flex-end'
+        background='blue'
+        height='500px'
+        borderRadius='10px'
+        p='3'
+      >
+        <Box h="auto" overflow="auto">
+          {messages.map((msgData, idx) => (
+            <Heading color='white' key={idx}>
+              {msgData.msg}
+            </Heading>
+          ))}
+        </Box>
+        <Formik
+          initialValues={{ message: "" }}
+          // validate={() => ({})}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            // send message through socket
+            const newMessage: IMessage = {
+              msg: values.message,
+              authorId: 3,
+              messageId: 5,
+            };
+            setMessages([...messages, newMessage]);
+            // socket.emit("new message", {
+            //   message: values.message,
+            //   authorId: 4,
+            // });
+            resetForm();
+            setSubmitting(false);
           }}
         >
-          send
-        </Button>
+          {({ isSubmitting, handleChange, values }) => (
+            <Form>
+              <Flex>
+                <Input
+                  type='text'
+                  name='message'
+                  value={values.message || ""}
+                  onChange={handleChange}
+                  placeholder='Howdy, partner.'
+                  flex='1'
+                  border='none'
+                  background='white'
+                  mr='3'
+                  mb='3'
+                />
+                <Button type='submit' disabled={isSubmitting}>
+                  send
+                </Button>
+              </Flex>
+            </Form>
+          )}
+        </Formik>
       </Flex>
     </Layout>
   );
