@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import { config } from "dotenv";
+config();
 // import connectRedis from "connect-redis";
 // import session from "express-session";
 // import Redis from "ioredis";
