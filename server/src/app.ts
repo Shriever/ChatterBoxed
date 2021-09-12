@@ -1,8 +1,7 @@
+import "dotenv/config"
 import express from "express";
 import cors from "cors";
 import http from "http";
-import { config } from "dotenv";
-config();
 // import connectRedis from "connect-redis";
 // import session from "express-session";
 // import Redis from "ioredis";
@@ -11,7 +10,9 @@ import { pool } from "./db";
 import { IMessage } from "./types";
 import { login, register } from "./routes";
 import { __prod__ } from "./constants";
+import { createAccessToken, createRefreshToken } from "./auth";
 
+// TODO add JWT auth
 const app = express();
 
 app.use(
@@ -20,11 +21,18 @@ app.use(
     credentials: true,
   })
 );
-
 app.use(express.json());
 
 app.post("/register", register);
 app.post("/login", login);
+app.get("/test", (_req, res) => {
+  res.cookie("lid", createRefreshToken());
+
+  res.status(202).json({
+    success: true,
+    accessToken: createAccessToken(),
+  });
+});
 
 const server = http.createServer(app);
 const io = new Server(server, {

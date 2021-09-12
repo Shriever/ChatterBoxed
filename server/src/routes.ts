@@ -1,5 +1,8 @@
+import { sign } from "jsonwebtoken";
 import { pool } from "./db";
 import { ExpressFn } from "./types";
+
+// TODO hash password
 
 export const register: ExpressFn = async (req, res) => {
   const { username, password } = req.body;
@@ -22,7 +25,18 @@ export const login: ExpressFn = async (req, res) => {
     const user = data.rows[0];
 
     if (user) {
-      res.status(202).json({ success: true });
+      res.cookie(
+        "lid",
+        sign({ userId: user.id }, "hello kitty", {
+          expiresIn: "7d",
+        })
+      );
+      res.status(202).json({
+        success: true,
+        accessToken: sign({ userId: user.id }, "hello kitty", {
+          expiresIn: "45m",
+        }),
+      });
     } else {
       res.status(202).json({ success: false });
     }
