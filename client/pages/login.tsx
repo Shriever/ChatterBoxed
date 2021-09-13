@@ -18,11 +18,14 @@ const login = () => {
           const res = await fetch("http://localhost:5000/login", {
             method: "POST",
             headers: {
-              authorization: "",
               "content-type": "application/json",
             },
+            body: JSON.stringify({
+              username: values.username,
+              password: values.password,
+            }),
           });
-          const data = res.json();
+          const data = await res.json();
           console.log(data);
 
           // if login successful reroute to home

@@ -1,4 +1,4 @@
-import "dotenv/config"
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import http from "http";
@@ -10,7 +10,8 @@ import { pool } from "./db";
 import { IMessage } from "./types";
 import { login, register } from "./routes";
 import { __prod__ } from "./constants";
-import { createAccessToken, createRefreshToken, isAuth } from "./auth";
+import { createAccessToken, isAuth } from "./auth";
+import { verify } from "jsonwebtoken";
 
 // TODO add JWT auth
 const app = express();
@@ -25,15 +26,29 @@ app.use(express.json());
 
 app.post("/register", register);
 app.post("/login", login);
-app.get("/", isAuth, (req,res) => {
-  
-})
-app.get("/test", (_req, res) => {
-  res.cookie("lid", createRefreshToken());
+app.get("/", isAuth, (req, res) => {
+  console.log(req.body.user);
+  res.send(req.body.user);
+});
+app.post("/refresh_token", (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader?.split(" ")[1];
 
-  res.status(202).json({
-    success: true,
-    accessToken: createAccessToken(),
+  if (!token) {
+    res.sendStatus(403);
+  }
+
+  verify(token!, process.env.REFRESH_TOKEN_SECRET!, (err, user) => {
+    if (err) {
+      res.sendStatus(401);
+    } else {
+      const accessToken = createAccessToken({
+        id: user!.id,
+        username: user!.username,
+      });
+
+      res.json({ success: true, accessToken });
+    }
   });
 });
 

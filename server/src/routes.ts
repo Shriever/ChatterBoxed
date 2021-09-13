@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import { createAccessToken, createRefreshToken } from "./auth";
 import { pool } from "./db";
 import { ExpressFn } from "./types";
 
@@ -25,17 +25,10 @@ export const login: ExpressFn = async (req, res) => {
     const user = data.rows[0];
 
     if (user) {
-      res.cookie(
-        "lid",
-        sign({ userId: user.id }, "hello kitty", {
-          expiresIn: "7d",
-        })
-      );
+      res.cookie("lid", createRefreshToken({ username, id: user.id }));
       res.status(202).json({
         success: true,
-        accessToken: sign({ userId: user.id }, "hello kitty", {
-          expiresIn: "45m",
-        }),
+        accessToken: createAccessToken({ id: user.id, username }),
       });
     } else {
       res.status(202).json({ success: false });
