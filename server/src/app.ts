@@ -31,11 +31,16 @@ app.get("/", isAuth, (req, res) => {
   res.send(req.body.user);
 });
 app.post("/refresh_token", (req, res) => {
+  console.log(req.headers);
+
   const cookie = req.headers["cookie"];
   const token = cookie?.split("=")[1];
 
+  console.log(cookie?.split("="));
+
   if (!token) {
     res.sendStatus(403);
+    return;
   }
 
   verify(token!, process.env.REFRESH_TOKEN_SECRET!, (err, user) => {

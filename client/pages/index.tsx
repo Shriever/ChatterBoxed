@@ -1,8 +1,5 @@
 import { Box, Button, Flex, Heading, Input } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
-import { valueScaleCorrection } from "framer-motion/types/render/dom/projection/scale-correction";
-import Head from "next/head";
-import Image from "next/image";
+import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { Layout } from "../components/Layout";
 // import styles from "../styles/Home.module.css";
@@ -23,7 +20,7 @@ export default function Home() {
     socket.connect();
     socket.on("new message", (newMessages: IMessage[]) => {
       setMessages(newMessages);
-      console.log(messages);
+      // console.log(messages);
     });
   }, []);
 
@@ -37,7 +34,7 @@ export default function Home() {
         borderRadius='10px'
         p='3'
       >
-        <Box h="auto" overflow="auto">
+        <Box h='auto' overflow='auto'>
           {messages.map((msgData, idx) => (
             <Heading color='white' key={idx}>
               {msgData.msg}

@@ -1,15 +1,12 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import { Box, Button } from "@chakra-ui/react";
-import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
-import { useRouter } from "next/router";
 import { Layout } from "../components/Layout";
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
-  const router = useRouter();
   return (
     <Layout variant='small'>
       <Formik

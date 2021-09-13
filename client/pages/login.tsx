@@ -1,12 +1,10 @@
-import { Box, Flex, Link, Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { Layout } from "../components/Layout";
-import { Wrapper } from "../components/Wrapper";
-import NextLink from "next/link";
 import { InputField } from "../components/InputField";
-import { getAccessToken, setAccessToken } from "../utils/accessToken";
+import { setAccessToken } from "../utils/accessToken";
 
 const login = () => {
   const router = useRouter();
@@ -17,22 +15,26 @@ const login = () => {
         onSubmit={async (values, { setSubmitting }) => {
           // send post to server to login
           try {
-            const res = await fetch("http://localhost:5000/login", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify({
-                username: values.username,
-                password: values.password,
-              }),
+            const body = JSON.stringify({
+              username: values.username,
+              password: values.password,
             });
+
+            const res = await fetch("http://localhost:5000/login", {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+              body,
+            });
+
             const data = await res.json();
 
             setAccessToken(data.accessToken);
+            setSubmitting(false);
             router.push("/");
           } catch (err) {
-            console.error(err);
+            console.error("loginhere", err.message);
           }
         }}
       >

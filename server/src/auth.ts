@@ -12,8 +12,6 @@ export const createAccessToken = (user: IUser) => {
 };
 
 export const createRefreshToken = (user: IUser) => {
-  console.log(process.env.REFRESH_TOKEN_SECRET!);
-
   return sign(user, process.env.REFRESH_TOKEN_SECRET!, {
     expiresIn: "7d",
   });
