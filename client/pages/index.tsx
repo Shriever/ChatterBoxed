@@ -2,7 +2,6 @@ import { Box, Button, Flex, Heading, Input } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { Layout } from "../components/Layout";
-// import styles from "../styles/Home.module.css";
 import { socket } from "../utils/socket";
 
 interface IMessage {

@@ -16,12 +16,14 @@ const Register: React.FC<registerProps> = ({}) => {
         {({ isSubmitting }) => (
           <Form>
             <InputField
+              autoComplete='on'
               name='username'
               placeholder='username'
               label='Username'
             />
             <Box mt={4}>
               <InputField
+                autoComplete='on'
                 name='password'
                 placeholder='password'
                 label='Password'

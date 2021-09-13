@@ -7,14 +7,11 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     fetch("http://localhost:5000/refresh_token", {
       method: "POST",
-      // headers: "application/json",
-      // body: {value: 10},
       credentials: "include",
     })
-      .then(async x => {
-        const data = await x.json();
-        console.log("data: ", data);
-        setLoading(false);
+      .then(x => x.json())
+      .then(data => {
+        console.log(data);
       })
       .catch(err => console.log("Error: ", err));
   });
