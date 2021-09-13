@@ -31,8 +31,8 @@ app.get("/", isAuth, (req, res) => {
   res.send(req.body.user);
 });
 app.post("/refresh_token", (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader?.split(" ")[1];
+  const cookie = req.headers["cookie"];
+  const token = cookie?.split("=")[1];
 
   if (!token) {
     res.sendStatus(403);

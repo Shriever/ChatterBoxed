@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Link, Flex, Button, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { getAccessToken } from "../utils/accessToken";
 
 interface NavBarProps {}
 
@@ -11,9 +12,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   let body = null;
 
   // data is loading
-  if (false) {
-    // user not logged in
-  } else if ("hello") {
+  if (getAccessToken()) {
     body = (
       <>
         <NextLink href='/login'>

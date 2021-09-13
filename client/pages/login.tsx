@@ -6,6 +6,7 @@ import { Layout } from "../components/Layout";
 import { Wrapper } from "../components/Wrapper";
 import NextLink from "next/link";
 import { InputField } from "../components/InputField";
+import { getAccessToken, setAccessToken } from "../utils/accessToken";
 
 const login = () => {
   const router = useRouter();
@@ -15,22 +16,24 @@ const login = () => {
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setSubmitting }) => {
           // send post to server to login
-          const res = await fetch("http://localhost:5000/login", {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({
-              username: values.username,
-              password: values.password,
-            }),
-          });
-          const data = await res.json();
-          console.log(data);
+          try {
+            const res = await fetch("http://localhost:5000/login", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({
+                username: values.username,
+                password: values.password,
+              }),
+            });
+            const data = await res.json();
 
-          // if login successful reroute to home
-
-          // else display error
+            setAccessToken(data.accessToken);
+            router.push("/");
+          } catch (err) {
+            console.error(err);
+          }
         }}
       >
         {({ isSubmitting }) => (
