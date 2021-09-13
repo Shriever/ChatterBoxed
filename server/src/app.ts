@@ -10,7 +10,7 @@ import { pool } from "./db";
 import { IMessage } from "./types";
 import { login, register } from "./routes";
 import { __prod__ } from "./constants";
-import { createAccessToken, createRefreshToken } from "./auth";
+import { createAccessToken, createRefreshToken, isAuth } from "./auth";
 
 // TODO add JWT auth
 const app = express();
@@ -25,6 +25,9 @@ app.use(express.json());
 
 app.post("/register", register);
 app.post("/login", login);
+app.get("/", isAuth, (req,res) => {
+  
+})
 app.get("/test", (_req, res) => {
   res.cookie("lid", createRefreshToken());
 

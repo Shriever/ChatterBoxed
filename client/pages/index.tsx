@@ -18,14 +18,14 @@ interface IMessage {
 export default function Home() {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
-  // useEffect(() => {
-  //   socket.auth = { username: "jerry" };
-  //   socket.connect();
-  //   socket.on("new message", (newMessages: IMessage[]) => {
-  //     setMessages(newMessages);
-  //     console.log(messages);
-  //   });
-  // }, []);
+  useEffect(() => {
+    socket.auth = { username: "jerry" };
+    socket.connect();
+    socket.on("new message", (newMessages: IMessage[]) => {
+      setMessages(newMessages);
+      console.log(messages);
+    });
+  }, []);
 
   return (
     <Layout>
@@ -46,7 +46,6 @@ export default function Home() {
         </Box>
         <Formik
           initialValues={{ message: "" }}
-          // validate={() => ({})}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             // send message through socket
             const newMessage: IMessage = {

@@ -13,12 +13,21 @@ const login = () => {
     <Layout variant='small'>
       <Formik
         initialValues={{ username: "", password: "" }}
-        onSubmit={() => {
-            // send post to server to login
+        onSubmit={async (values, { setSubmitting }) => {
+          // send post to server to login
+          const res = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: {
+              authorization: "",
+              "content-type": "application/json",
+            },
+          });
+          const data = res.json();
+          console.log(data);
 
-            // if login successful reroute to home
+          // if login successful reroute to home
 
-            // else display error
+          // else display error
         }}
       >
         {({ isSubmitting }) => (
@@ -40,7 +49,7 @@ const login = () => {
               mt={4}
               type='submit'
               isLoading={isSubmitting}
-              variantColor='teal'
+              colorScheme='teal'
             >
               Login
             </Button>
