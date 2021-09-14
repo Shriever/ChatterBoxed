@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import "dotenv/config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -6,23 +7,24 @@ import path from "path";
 import { buildSchema } from "type-graphql";
 import { Post } from "./entities/Post";
 import { HelloResolver } from "./resolvers/hello";
+import { PostResolver } from "./resolvers/post";
 
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
     url: process.env.DATABASE_URL,
+    synchronize: true,
     logging: true,
     migrations: [path.join(__dirname, "./migrations")],
     entities: [Post],
   });
-
-  console.log(conn);
+  `${conn}`;
 
   const app = express();
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [HelloResolver, PostResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
