@@ -64,11 +64,20 @@ export class UserResolver {
       };
     }
     const hashedPassword = await hash(password);
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-    }).save();
-    return { user };
+    try {
+      const user = await User.create({
+        username,
+        password: hashedPassword,
+      }).save();
+      return { user };
+    } catch (error) {
+      if (error.detail.includes("already exists")) {
+        return {
+          errors: [{ field: "Username", message: "Username already exists." }],
+        };
+      }
+      return { errors: [{ field: "register", message: "unknown" }] };
+    }
   }
 
   @Mutation(() => UserResponse)
