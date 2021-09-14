@@ -10,18 +10,17 @@ import { ObjectType, Field, Int } from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Post extends BaseEntity {
+export class User extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Field()
-  @Column()
-  title!: string;
+  @Column({ type: "text", unique: true })
+  username!: string;
 
-  @Field()
   @Column()
-  text!: string;
+  password!: string;
 
   @Field(() => String)
   @CreateDateColumn()

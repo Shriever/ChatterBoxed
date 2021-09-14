@@ -8,6 +8,8 @@ import { buildSchema } from "type-graphql";
 import { Post } from "./entities/Post";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
+import { User } from "./entities/User";
+import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
   const conn = await createConnection({
@@ -16,7 +18,7 @@ const main = async () => {
     synchronize: true,
     logging: true,
     migrations: [path.join(__dirname, "./migrations")],
-    entities: [Post],
+    entities: [Post, User],
   });
   `${conn}`;
 
@@ -24,7 +26,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver],
+      resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
