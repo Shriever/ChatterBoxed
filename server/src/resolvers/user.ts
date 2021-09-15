@@ -1,13 +1,16 @@
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
-} from "type-graphql";
-import { User } from "../entities/User";
-import { hash, verify } from "argon2";
+} from 'type-graphql';
+import { User } from '../entities/User';
+import { hash, verify } from 'argon2';
+import { MyContext } from 'src/types';
 
 @ObjectType()
 class FieldError {
@@ -38,17 +41,28 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: MyContext) {
+    const { userId } = req.session;
+    if (!userId) {
+      return null;
+    }
+
+    return User.findOne(userId);
+  }
+
   @Mutation(() => UserResponse)
   async register(
-    @Arg("options") options: UsernamePasswordInput
+    @Arg('options') options: UsernamePasswordInput,
+    @Ctx() {req}: MyContext
   ): Promise<UserResponse> {
     const { username, password } = options;
     if (username.length < 3) {
       return {
         errors: [
           {
-            field: "Username",
-            message: "Username must be at least 3 characters long.",
+            field: 'Username',
+            message: 'Username must be at least 3 characters long.',
           },
         ],
       };
@@ -57,8 +71,8 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: "Password",
-            message: "Password must be at least 3 characters long.",
+            field: 'Password',
+            message: 'Password must be at least 3 characters long.',
           },
         ],
       };
@@ -69,20 +83,24 @@ export class UserResolver {
         username,
         password: hashedPassword,
       }).save();
+
+      req.session.userId = user.id;
+
       return { user };
     } catch (error) {
-      if (error.detail.includes("already exists")) {
+      if (error.detail.includes('already exists')) {
         return {
-          errors: [{ field: "Username", message: "Username already exists." }],
+          errors: [{ field: 'Username', message: 'Username already exists.' }],
         };
       }
-      return { errors: [{ field: "register", message: "unknown" }] };
+      return { errors: [{ field: 'register', message: 'unknown' }] };
     }
   }
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg("options") options: UsernamePasswordInput
+    @Arg('options') options: UsernamePasswordInput,
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const { username, password } = options;
 
@@ -92,16 +110,18 @@ export class UserResolver {
 
     if (!user) {
       return {
-        errors: [{ field: "login", message: "Could not login" }],
+        errors: [{ field: 'login', message: 'Could not login' }],
       };
     }
     const isValid = verify(user.password, password);
 
     if (!isValid) {
       return {
-        errors: [{ field: "login", message: "Wrong password" }],
+        errors: [{ field: 'login', message: 'Wrong password' }],
       };
     }
+
+    req.session.userId = user.id;
 
     return { user };
   }
