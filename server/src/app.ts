@@ -15,6 +15,7 @@ import { User } from "./entities/User";
 import { UserResolver } from "./resolvers/user";
 import { __prod__ } from './constants';
 import { MyContext } from './types';
+import cors from 'cors';
 
 const main = async () => {
   const conn = await createConnection({
@@ -32,6 +33,8 @@ const main = async () => {
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
 
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
   app.use(
     session({
       name: 'qid',
@@ -45,7 +48,6 @@ const main = async () => {
       saveUninitialized: false,
       secret: process.env.ACCESS__TOKEN_SECRET || 'amaZiNg sEcrEt',
       resave: false,
-      
     })
   );
   const apolloServer = new ApolloServer({
@@ -63,6 +65,7 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
+    cors: false,
   });
 
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;

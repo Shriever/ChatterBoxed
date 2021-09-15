@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Link, Flex, Button, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
-import { getAccessTokenData } from "../utils/accessToken";
+import { useRouter } from 'next/router';
 
 interface NavBarProps {}
 
@@ -10,10 +9,9 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
 
   let body = null;
-  const tokenData = getAccessTokenData();
 
   // data is loading
-  if (!tokenData) {
+  if ('true') {
     body = (
       <>
         <NextLink href='/login'>
@@ -28,7 +26,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     body = (
       <Flex align='center'>
-        <Box mr={2}>{tokenData.username}</Box>
+        <Box mr={2}>username</Box>
         <Button onClick={() => {}} variant='link'>
           Logout
         </Button>
@@ -44,7 +42,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             <Heading>ChatterBoxed</Heading>
           </Link>
         </NextLink>
-        <Box ml={"auto"}>{body}</Box>
+        <Box ml={'auto'}>{body}</Box>
       </Flex>
     </Flex>
   );
