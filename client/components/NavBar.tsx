@@ -2,12 +2,14 @@ import React from "react";
 import { Box, Link, Flex, Button, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
+import { useApolloClient } from '@apollo/client';
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [logout, { loading: logoutLoading }] = useLogoutMutation();
   const { data, loading } = useMeQuery();
+  const apolloClient = useApolloClient();
 
   let body = null;
 
@@ -33,6 +35,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           disabled={logoutLoading}
           onClick={async () => {
             await logout();
+            await apolloClient.resetStore();
           }}
           variant='link'
         >
