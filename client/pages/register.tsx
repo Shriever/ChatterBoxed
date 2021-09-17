@@ -4,7 +4,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { toErrorMap } from '../utils/toErrorMap';
-import { useRegisterMutation } from '../generated/graphql';
+import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { useRouter } from 'next/router';
 
 interface registerProps {}
@@ -20,6 +20,16 @@ const Register: React.FC<registerProps> = ({}) => {
           const { username, password } = values;
           const response = await register({
             variables: { username, password },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: 'Query',
+                  me: data?.register.user,
+                },
+              });
+              cache.evict({ fieldName: 'posts:{}' });
+            },
           });
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));
