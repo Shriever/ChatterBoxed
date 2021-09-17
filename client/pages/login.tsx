@@ -3,22 +3,37 @@ import { Formik, Form } from "formik";
 import React from "react";
 import { Layout } from "../components/Layout";
 import { InputField } from "../components/InputField";
-import { useLoginMutation } from '../generated/graphql';
+import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
+import { useRouter } from 'next/router';
 
 const login = () => {
+  const router = useRouter();
   const [login] = useLoginMutation();
   return (
     <Layout variant='small'>
       <Formik
         initialValues={{ username: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
-          const { username, password } = values;
-          const response = await login({ variables: { username, password } });
+          // const { username, password } = values;
+          const response = await login({
+            variables: { options: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: 'Query',
+                  me: data?.login.user,
+                },
+              });
+              cache.evict({fieldName: "posts:{}"})
+            },
+          });
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
+          } else {
+            router.push('/');
           }
-          // console.log(data);
         }}
       >
         {({ isSubmitting }) => (
