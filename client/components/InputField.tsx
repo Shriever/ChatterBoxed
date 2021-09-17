@@ -5,11 +5,13 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-} from "@chakra-ui/react";
+  Textarea,
+} from '@chakra-ui/react';
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
+  isTextArea?: boolean;
 };
 
 // '' => false
@@ -24,7 +26,11 @@ export const InputField: React.FC<InputFieldProps> = ({
   return (
     <FormControl isInvalid={!!error}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
-      <Input autoComplete='on' {...field} {...props} id={field.name} />
+      {props.isTextArea ? (
+        <Textarea id={field.name} />
+      ) : (
+        <Input autoComplete='on' {...field} {...props} id={field.name} />
+      )}
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );
