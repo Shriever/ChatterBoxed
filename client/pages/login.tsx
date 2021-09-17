@@ -4,6 +4,7 @@ import React from "react";
 import { Layout } from "../components/Layout";
 import { InputField } from "../components/InputField";
 import { useLoginMutation } from '../generated/graphql';
+import { toErrorMap } from '../utils/toErrorMap';
 
 const login = () => {
   const [login] = useLoginMutation();
@@ -11,10 +12,13 @@ const login = () => {
     <Layout variant='small'>
       <Formik
         initialValues={{ username: '', password: '' }}
-        onSubmit={async values => {
+        onSubmit={async (values, { setErrors }) => {
           const { username, password } = values;
-          const data = await login({ variables: { username, password } });
-          console.log(data);
+          const response = await login({ variables: { username, password } });
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors));
+          }
+          // console.log(data);
         }}
       >
         {({ isSubmitting }) => (

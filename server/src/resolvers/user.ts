@@ -22,7 +22,7 @@ class FieldError {
 }
 
 @InputType()
-class UsernamePasswordInput {
+class usernamePasswordInput {
   @Field()
   username: string;
 
@@ -53,7 +53,7 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('options') options: usernamePasswordInput,
     @Ctx() {req}: MyContext
   ): Promise<UserResponse> {
     const { username, password } = options;
@@ -61,7 +61,7 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'Username',
+            field: 'username',
             message: 'Username must be at least 3 characters long.',
           },
         ],
@@ -71,7 +71,7 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'Password',
+            field: 'password',
             message: 'Password must be at least 3 characters long.',
           },
         ],
@@ -90,7 +90,7 @@ export class UserResolver {
     } catch (error) {
       if (error.detail.includes('already exists')) {
         return {
-          errors: [{ field: 'Username', message: 'Username already exists.' }],
+          errors: [{ field: 'username', message: 'Username already exists.' }],
         };
       }
       return { errors: [{ field: 'register', message: 'unknown' }] };
@@ -99,7 +99,7 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('options') options: usernamePasswordInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const { username, password } = options;
