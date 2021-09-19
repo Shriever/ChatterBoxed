@@ -9,6 +9,7 @@ export default function Home() {
   } else if (!loading && !data) {
     return <div>an error has occurred</div>;
   }
+  console.log(data);
   return (
     <Layout>
       <Box>

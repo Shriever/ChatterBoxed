@@ -30,7 +30,10 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     body = (
       <Flex align='center'>
-        <Box mr={2}>{data.me.username}</Box>
+        <Button>
+          <NextLink href='/create-post'>Create Post</NextLink>
+        </Button>
+        <Box mx={2}>{data.me.username}</Box>
         <Button
           disabled={logoutLoading}
           onClick={async () => {

@@ -37,7 +37,7 @@ const CreatePost = () => {
         {({ isSubmitting }) => (
           <Form>
             <InputField label='Title' name='title' />
-            <InputField isTextArea={true} label='Body' name='body' />
+            <InputField isTextArea={true} label='Body' name='text' />
 
             <Button
               type='submit'
