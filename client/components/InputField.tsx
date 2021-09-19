@@ -27,7 +27,7 @@ export const InputField: React.FC<InputFieldProps> = ({
     <FormControl isInvalid={!!error}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       {props.isTextArea ? (
-        <Textarea id={field.name} />
+        <Textarea id={field.name} {...field} />
       ) : (
         <Input autoComplete='on' {...field} {...props} id={field.name} />
       )}
