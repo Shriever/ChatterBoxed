@@ -4,11 +4,18 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
-import { useCreatePostMutation } from '../generated/graphql';
+import { useCreatePostMutation, useMeQuery } from '../generated/graphql';
 
 const CreatePost = () => {
+  const { data, loading } = useMeQuery();
   const [createPost] = useCreatePostMutation();
   const router = useRouter();
+
+  if (loading) {
+    return <div></div>;
+  } else if (!data?.me) {
+    router.push('/login');
+  }
   return (
     <Layout>
       <Formik
